@@ -2,18 +2,19 @@ package com.capstone.goods.controller;
 
 import com.capstone.goods.model.GoodsDto;
 import com.capstone.goods.service.GoodsService;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/goods")
 public class GoodsController {
     private final GoodsService goodsService;
-
-    public GoodsController(GoodsService goodsService) {
-        this.goodsService = goodsService;
-    }
 
     @GetMapping
     public List<GoodsDto> getAllGoods() {
@@ -25,10 +26,21 @@ public class GoodsController {
         return goodsService.getGoodsById(id);
     }
 
-    @PostMapping
-    public void addGoods(@RequestBody GoodsDto goodsDto) {
-        goodsService.addGoods(goodsDto);
+    @PatchMapping("/modify/{id}")
+    public void modifyGoodsById(
+            @PathVariable Long id,
+            @RequestBody GoodsDto goodsDto) {
+
+        goodsService.modifyGoods(id, goodsDto);
     }
+
+    @PostMapping("/add")
+    public ResponseEntity<Void> addGoods(@RequestBody @Valid GoodsDto goodsDto, @RequestHeader("Authorization") String token) {
+        token = token.replace("Bearer ", "");
+        goodsService.addGoods(goodsDto, token);
+        return ResponseEntity.ok().build();
+    }
+
 
     @DeleteMapping("/{id}")
     public void deleteGoods(@PathVariable Long id) {

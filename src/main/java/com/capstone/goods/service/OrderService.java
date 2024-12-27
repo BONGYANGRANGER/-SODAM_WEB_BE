@@ -5,29 +5,19 @@ import com.capstone.goods.db.OrderRepository;
 import com.capstone.goods.model.Goods;
 import com.capstone.goods.model.Order;
 import com.capstone.goods.model.OrderDto;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@AllArgsConstructor
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
     private final GoodsRepository goodsRepository;
     private final OrderConverter orderConverter;
 
-    public OrderService(OrderRepository orderRepository, GoodsRepository goodsRepository, OrderConverter orderConverter) {
-        this.orderRepository = orderRepository;
-        this.goodsRepository = goodsRepository;
-        this.orderConverter = orderConverter;
-    }
-
-    public List<OrderDto> getOrdersByBuyer(String buyerId) {
-        return orderRepository.findAllByBuyerId(buyerId).stream()
-                .map(orderConverter::entityToDto)
-                .collect(Collectors.toList());
-    }
 
     public String createOrder(String buyerId, Long goodsId, int quantity) {
         Goods goods = goodsRepository.findById(goodsId).orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다."));
@@ -37,11 +27,8 @@ public class OrderService {
         }
 
         Order order = Order.builder()
-                .buyerId(buyerId)
-                .goodsId(goodsId)
                 .quantity(quantity)
                 .totalPrice(goods.getPrice() * quantity)
-                .orderDate(LocalDateTime.now())
                 .build();
 
         goods.setStock(goods.getStock() - quantity);

@@ -1,5 +1,8 @@
 package com.capstone.goods.model;
 
+import com.capstone.user.model.User;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import lombok.*;
 import jakarta.validation.constraints.*;
 
@@ -10,10 +13,21 @@ import jakarta.validation.constraints.*;
 @AllArgsConstructor
 public class GoodsDto {
 
-    private Long id;
+    @NotNull
     private String name;
+
+    @NotNull
     private String category;
+
+    @NotNull
     private int price;
+
+    @NotNull
+    private int minQuantity;
+
+    @NotNull
     private int stock;
-    private String description;
+
+    @JsonSetter(nulls = Nulls.SKIP)
+    private Goods.DeliveryRegion deliveryRegion = Goods.DeliveryRegion.ALL;
 }

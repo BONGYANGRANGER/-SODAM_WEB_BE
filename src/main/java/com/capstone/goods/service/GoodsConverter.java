@@ -2,30 +2,34 @@ package com.capstone.goods.service;
 
 import com.capstone.goods.model.Goods;
 import com.capstone.goods.model.GoodsDto;
+import com.capstone.user.model.User;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GoodsConverter {
 
+    // Goods -> GoodsDto 변환
     public GoodsDto entityToDto(Goods goods) {
         return GoodsDto.builder()
-                .id(goods.getId())
                 .name(goods.getName())
                 .category(goods.getCategory())
                 .price(goods.getPrice())
                 .stock(goods.getStock())
-                .description(goods.getDescription())
+                .minQuantity(goods.getMinQuantity())
+                .deliveryRegion(goods.getDeliveryRegion())
                 .build();
     }
 
-    public Goods dtoToEntity(GoodsDto goodsDto) {
+    // GoodsDto -> Goods 변환 (User 매핑 포함)
+    public Goods dtoToEntity(GoodsDto goodsDto, User user) {
         return Goods.builder()
-                .id(goodsDto.getId())
                 .name(goodsDto.getName())
                 .category(goodsDto.getCategory())
                 .price(goodsDto.getPrice())
                 .stock(goodsDto.getStock())
-                .description(goodsDto.getDescription())
+                .minQuantity(goodsDto.getMinQuantity())
+                .deliveryRegion(goodsDto.getDeliveryRegion())
+                .user(user)
                 .build();
     }
 }

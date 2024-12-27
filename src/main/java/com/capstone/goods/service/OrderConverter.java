@@ -12,11 +12,8 @@ public class OrderConverter {
     public OrderDto entityToDto(Order order) {
         return OrderDto.builder()
                 .id(order.getId())
-                .goodsId(order.getGoodsId())
-                .buyerId(order.getBuyerId())
                 .quantity(order.getQuantity())
                 .totalPrice(order.getTotalPrice())
-                .orderDate(order.getOrderDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build();
     }
 }

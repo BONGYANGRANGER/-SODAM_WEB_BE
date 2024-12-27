@@ -1,24 +1,24 @@
 package com.capstone.user.service;
 
 import com.capstone.user.db.UserRepository;
-import com.capstone.user.model.LoginRequestDTO;
 import com.capstone.user.model.UserDTO;
 import com.capstone.user.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Getter
 @Service
+@AllArgsConstructor
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserDTO createUser(UserDTO userDTO) {
@@ -37,21 +37,18 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserDTO loginUser(LoginRequestDTO loginRequest) {
-        Optional<User> userOptional = userRepository.findByEmail(loginRequest.getEmail());
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                return UserConverter.toDTO(user);
-            }
-        }
-        throw new RuntimeException("Invalid email or password");
-    }
-
-    @Transactional(readOnly = true)
     public UserDTO getUserDtoById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
         return UserConverter.toDTO(user);
+    }
+
+    public User getUser(String email) {
+        Optional<User> user = this.userRepository.findByEmail(email);
+        if(user.isPresent()) {
+            return user.get();
+        } else {
+            throw new RuntimeException("user not found");
+        }
     }
 }

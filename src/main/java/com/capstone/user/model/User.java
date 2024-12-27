@@ -1,5 +1,6 @@
 package com.capstone.user.model;
 
+import com.capstone.goods.model.Wishlist;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -32,7 +33,6 @@ public class User {
     @Size(max = 50)
     private String email;
 
-    @NotBlank
     @Size(max = 20)
     private String name;
 
@@ -53,6 +53,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role = Role.USER;
+
 
     public enum Role {
         USER, SELLER
