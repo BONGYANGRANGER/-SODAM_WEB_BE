@@ -16,12 +16,12 @@ public class DiaryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String date;  // 예: "2024-12-23"
+    private String date;
 
     @Column(length = 2000)
     private String content;
 
-    private String imageOption; // "AI" or "UPLOAD"
+    private String imageOption;
 
-    private String imageUrl;    // 최종 이미지 URL (직접 업로드 or AI 생성)
+    private String imageUrl;
 }

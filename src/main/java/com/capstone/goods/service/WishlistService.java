@@ -86,3 +86,4 @@ public class WishlistService {
         return ResponseEntity.status(HttpStatus.OK).body("모든 찜 항목이 삭제되었습니다.");
         }
     }
+

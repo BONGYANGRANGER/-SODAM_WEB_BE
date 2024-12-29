@@ -3,66 +3,60 @@ package com.capstone.goods.service;
 import com.capstone.goods.db.GoodsRepository;
 import com.capstone.goods.model.Goods;
 import com.capstone.goods.model.GoodsDto;
-import com.capstone.jwt.TokenProvider;
-import com.capstone.user.db.UserRepository;
-import com.capstone.user.model.User;
-import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class GoodsService {
+
     private final GoodsRepository goodsRepository;
-    private final GoodsConverter goodsConverter;
-    private final TokenProvider tokenProvider;
-    private final UserRepository userRepository;
 
-    public List<GoodsDto> getAllGoods() {
-        return goodsRepository.findAll().stream()
-                .map(goodsConverter::entityToDto)
-                .collect(Collectors.toList());
+    public GoodsDto addGoods(GoodsDto dto, MultipartFile file) {
+        String imageUrl = uploadImage(file);
+
+        Goods goods = Goods.builder()
+                .name(dto.getName())
+                .category(dto.getCategory())
+                .price(dto.getPrice())
+                .minQuantity(dto.getMinQuantity())
+                .stock(dto.getStock())
+                .imageUrl(imageUrl)
+                .build();
+
+        Goods saved = goodsRepository.save(goods);
+        return toGoodsDto(saved);
     }
 
-    public GoodsDto getGoodsById(Long id) {
-        Goods goods = goodsRepository.findById(id).orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다."));
-        return goodsConverter.entityToDto(goods);
-    }
+    private String uploadImage(MultipartFile file) {
+        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        Path path = Paths.get("uploads/images/goods", fileName);
 
-    @Transactional
-    public void addGoods(GoodsDto goodsDto, String token) {
-        Long userId = tokenProvider.getClaims(token).get("id", Long.class);
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-
-        if (goodsRepository.existsByNameAndCategory(goodsDto.getName(), goodsDto.getCategory())) {
-            throw new IllegalArgumentException("이미 동일한 이름과 카테고리를 가진 상품이 존재합니다.");
+        try {
+            Files.createDirectories(path.getParent());
+            Files.write(path, file.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException("이미지 업로드 실패", e);
         }
-
-        Goods goods = goodsConverter.dtoToEntity(goodsDto, user);
-        goodsRepository.save(goods);
+        return "/uploads/images/goods/" + fileName;
     }
 
-    public GoodsDto modifyGoods(Long id, GoodsDto goodsDto) {
-        Goods goods = goodsRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다."));
-
-        goods.setName(goodsDto.getName());
-        goods.setCategory(goodsDto.getCategory());
-        goods.setPrice(goodsDto.getPrice());
-        goods.setStock(goodsDto.getStock());
-        goodsRepository.save(goods);
-
-        return goodsConverter.entityToDto(goods);
-    }
-
-    // 상품 삭제
-    public void deleteGoods(Long id) {
-        goodsRepository.deleteById(id);
+    private GoodsDto toGoodsDto(Goods goods) {
+        return GoodsDto.builder()
+                .id(goods.getId())
+                .name(goods.getName())
+                .category(goods.getCategory())
+                .price(goods.getPrice())
+                .minQuantity(goods.getMinQuantity())
+                .stock(goods.getStock())
+                .imageUrl(goods.getImageUrl())
+                .build();
     }
 }

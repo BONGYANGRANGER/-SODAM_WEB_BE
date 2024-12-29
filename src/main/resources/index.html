@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goods Upload</title>
+</head>
+<body>
+<h1>Upload Goods</h1>
+<form action="/api/goods/add" method="post" enctype="multipart/form-data">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="goodsDto.name" required><br><br>
+
+    <label for="category">Category:</label>
+    <input type="text" id="category" name="goodsDto.category" required><br><br>
+
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="goodsDto.price" required><br><br>
+
+    <label for="minQuantity">Min Quantity:</label>
+    <input type="number" id="minQuantity" name="goodsDto.minQuantity" required><br><br>
+
+    <label for="stock">Stock:</label>
+    <input type="number" id="stock" name="goodsDto.stock" required><br><br>
+
+    <label for="deliveryRegion">Delivery Region:</label>
+    <select id="deliveryRegion" name="goodsDto.deliveryRegion">
+        <option value="ALL">ALL</option>
+        <option value="LOCAL">LOCAL</option>
+    </select><br><br>
+
+    <label for="image">Image:</label>
+    <input type="file" id="image" name="image" accept="image/*" required><br><br>
+
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>

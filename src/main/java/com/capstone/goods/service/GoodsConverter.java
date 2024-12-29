@@ -17,6 +17,7 @@ public class GoodsConverter {
                 .stock(goods.getStock())
                 .minQuantity(goods.getMinQuantity())
                 .deliveryRegion(goods.getDeliveryRegion())
+                .imageUrl(goods.getImageUrl()) // 이미지 URL 추가
                 .build();
     }
 
@@ -29,6 +30,7 @@ public class GoodsConverter {
                 .stock(goodsDto.getStock())
                 .minQuantity(goodsDto.getMinQuantity())
                 .deliveryRegion(goodsDto.getDeliveryRegion())
+                .imageUrl(goodsDto.getImageUrl()) // 이미지 URL 추가
                 .user(user)
                 .build();
     }

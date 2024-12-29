@@ -43,6 +43,8 @@ public class Goods {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "image_url")
+    private String imageUrl;
 
     public enum DeliveryRegion {
         ALL,    // 전체 지역 배송 가능
