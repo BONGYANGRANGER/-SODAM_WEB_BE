@@ -1,6 +1,11 @@
 package com.capstone.goods.model;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import javax.management.relation.Role;
 
 @Getter
 @Setter
@@ -8,11 +13,16 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDto {
-
-    private Long id;
-    private Long goodsId;
-    private String buyerId;
+    @NotNull
     private int quantity;
+
+    @NotNull
     private int totalPrice;
-    private String orderDate;
+
+    private Long goodsId;
+
+    private String message;
+
+    @JsonSetter(nulls = Nulls.SKIP)
+    private Order.Role role = Order.Role.SHIPPING;
 }

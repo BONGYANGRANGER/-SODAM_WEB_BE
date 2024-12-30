@@ -1,34 +1,29 @@
 package com.capstone.goods.model;
 
 import com.capstone.user.model.User;
-import lombok.*;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 
-import java.time.LocalDateTime;
+import java.sql.ConnectionBuilder;
 
 @Getter
 @Setter
+@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "orders")
-public class Order {
-
+public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Min(1)
-    private int quantity;
+    @Size(min = 2, max = 50)
+    private String name;
 
     @Min(0)
-    private int totalPrice;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role = Role.SHIPPING;
+    private int price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -38,8 +33,4 @@ public class Order {
     @JoinColumn(name = "goods_id")
     private Goods goods;
 
-    public enum Role {
-        SHIPPING,
-        DELIVERED
-    }
 }

@@ -1,8 +1,11 @@
 package com.capstone.goods.controller;
 
+import com.capstone.goods.model.Order;
 import com.capstone.goods.model.OrderDto;
 import com.capstone.goods.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,13 +17,13 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
 
-
-    @PostMapping
-    public String createOrder(
+    @PostMapping()
+    public ResponseEntity<OrderDto> createOrder(
             @RequestParam Long goodsId,
             @RequestParam int quantity,
-            Authentication authentication) {
-        String buyerId = (authentication != null) ? authentication.getName() : "guest";
-        return orderService.createOrder(buyerId, goodsId, quantity);
+            @RequestHeader("Authorization") String token) {
+        token = token.replace("Bearer ", "");
+
+        return orderService.createOrder(goodsId, quantity, token);
     }
 }
