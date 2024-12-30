@@ -5,31 +5,34 @@ import com.capstone.goods.service.WishlistService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/api/wishlists")
 @AllArgsConstructor
 public class WishlistController {
     private final WishlistService wishlistService;
 
-    @PostMapping()
-    public ResponseEntity<WishlistDto> addlike(@RequestHeader("Authorization") String token, @RequestParam Long goodsId) {
-        token = token.replace("Bearer ", "");
+    @PostMapping
+    public ResponseEntity<WishlistDto> addLike(@RequestHeader("Authorization") String token, @RequestParam Long goodsId) {
+        token = extractToken(token);
         WishlistDto wishlistDto = wishlistService.addlike(token, goodsId);
         return new ResponseEntity<>(wishlistDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletelike(@RequestHeader("Authorization") String token, @PathVariable Long id) {
-        token = token.replace("Bearer ", "");
+    public ResponseEntity<String> deleteLike(@RequestHeader("Authorization") String token, @PathVariable Long id) {
+        token = extractToken(token);
         return wishlistService.deletelike(token, id);
     }
 
     @DeleteMapping("/all")
     public ResponseEntity<String> deleteAll(@RequestHeader("Authorization") String token) {
-        token = token.replace("Bearer ", "");
+        token = extractToken(token);
         return wishlistService.deleteAlllike(token);
+    }
+
+    private String extractToken(String token) {
+        return token.replace("Bearer ", "");
     }
 }

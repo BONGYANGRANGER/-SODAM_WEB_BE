@@ -13,6 +13,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfig {
 
+    /**
+     * OpenAPI 기본 정보 및 서버 설정
+     */
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
@@ -22,11 +25,11 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Capstone Project API")
                         .description("Capstone 프로젝트의 API 문서입니다.")
-                        .version("1.0.0"));
+                        .version("2.0.0"));
     }
 
     /**
-     * /api/users/**
+     * /api/users/** 경로 그룹 설정
      */
     @Bean
     public GroupedOpenApi userGroupOpenApi() {
@@ -37,7 +40,7 @@ public class OpenApiConfig {
     }
 
     /**
-     * /api/goods/**
+     * /api/goods/** 경로 그룹 설정
      */
     @Bean
     public GroupedOpenApi goodsGroupOpenApi() {
@@ -48,7 +51,7 @@ public class OpenApiConfig {
     }
 
     /**
-     * /api/orders/**
+     * /api/orders/** 경로 그룹 설정
      */
     @Bean
     public GroupedOpenApi ordersGroupOpenApi() {
@@ -59,9 +62,8 @@ public class OpenApiConfig {
     }
 
     /**
-     * /api/board/**
+     * /api/ai/** 경로 그룹 설정
      */
-
     @Bean
     public GroupedOpenApi aiGroupOpenApi() {
         return GroupedOpenApi.builder()
@@ -70,11 +72,36 @@ public class OpenApiConfig {
                 .build();
     }
 
+    /**
+     * /api/diary/** 경로 그룹 설정
+     */
     @Bean
     public GroupedOpenApi diaryGroupOpenApi() {
         return GroupedOpenApi.builder()
                 .group("Diary")
                 .pathsToMatch("/api/diary/**")
+                .build();
+    }
+
+    /**
+     * /api/cart/** 경로 그룹 설정
+     */
+    @Bean
+    public GroupedOpenApi cartGroupOpenApi() {
+        return GroupedOpenApi.builder()
+                .group("cart")
+                .pathsToMatch("/api/cart/**")
+                .build();
+    }
+
+    /**
+     * /api/wishlists/** 경로 그룹 설정
+     */
+    @Bean
+    public GroupedOpenApi wishlistGroupOpenApi() {
+        return GroupedOpenApi.builder()
+                .group("wishlists")
+                .pathsToMatch("/api/wishlists/**")
                 .build();
     }
 }
